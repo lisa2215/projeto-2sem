@@ -215,4 +215,32 @@ export class PedidoVenda {
             return false;
         }
     }
+
+    static async atualizarPedidoVenda(pedido: PedidoVenda): Promise<boolean>{
+        try{
+            const queryUpdatePedido = `UPDATE pedido_venda SET 
+                                        id_carro = ${pedido.getIdCarro()},
+                                        id_cliente = ${pedido.getIdCliente()},
+                                        data_pedido = '${pedido.getDataPedido()}',
+                                        valor_pedido = ${pedido.getValorPedido()}
+                                        WHERE id_pedido = ${pedido.getIdPedido()};`;
+
+            const respostaBD =await database.query(queryUpdatePedido);
+
+            if(respostaBD.rowCount != 0){
+                console.log(`pedido atualizado com sucesso! ID: ${pedido.getIdPedido()}`);
+
+                return true;
+            }
+
+            return false; 
+
+        } catch (error) {
+        console.log(`Erro ao Atualizar pedido. verifique os logs para mais detalhes.`);
+
+        console.log(error);
+
+        return false;
+        }
+    }
 }

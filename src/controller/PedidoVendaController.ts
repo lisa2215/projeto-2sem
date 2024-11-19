@@ -93,4 +93,35 @@ export class PedidoVendaController extends PedidoVenda {
         }
 
     } 
+    
+    static async atualizar(req: Request, res: Response): Promise<Response>{
+        try{
+            const pedidoRecebido: PedidoVendaDTO = req.body;
+            
+            const idPedidoRecebido = parseInt(req.params.idPedido as string)
+
+            const pedidoAtualizado = new PedidoVenda (
+                pedidoRecebido.idCarro,
+                pedidoRecebido.idCliente,
+                pedidoRecebido.dataPedido,
+                pedidoRecebido.valorPedido
+            );
+
+            pedidoAtualizado.setIdPedido(idPedidoRecebido);
+
+            const respostaModelo = await PedidoVenda.atualizarPedidoVenda(pedidoAtualizado);
+
+            if (respostaModelo) {
+
+                return res.status(200).json({mensagem: "Pedido foi atualizado com sucesso!"});
+            } else{
+
+                return res.status(400).json({mensagem: "Não foi possivel atualizar o pedido. Entre em contato com o administrador."})
+            }
+        } catch (error) {
+            console.log(`Erro ao atualizar um pedido.${error}`);
+
+            return res.status(400).json({mensagem: "Não foi possivel atualizar o pedido. entre em contato com o administrador."})
+        }
+    }
 }

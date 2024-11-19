@@ -215,4 +215,31 @@ export class Cliente {
         }
     }
 
+    static async atualizarCliente(cliente: Cliente): Promise<boolean>{
+        try{
+            const queryUpdateCliente = `UPDATE cliente SET 
+                                        nome = '${cliente.getNome()}',
+                                        cpf = '${cliente.getCpf()}',
+                                        telefone = '${cliente.getTelefone()}
+                                        WHERE id_cliente = ${cliente.getIdCliente()};`;
+
+            const respostaBD =await database.query(queryUpdateCliente);
+
+            if(respostaBD.rowCount != 0){
+                console.log(`Cliente atualizado com sucesso! ID: ${cliente.getIdCliente()}`);
+
+                return true;
+            }
+
+            return false; 
+
+        } catch (error) {
+        console.log(`Erro ao Atualizar cliente. verifique os logs para mais detalhes.`);
+
+        console.log(error);
+
+        return false;
+        }
+    }
+
 } 

@@ -91,5 +91,35 @@ export class ClienteController extends Cliente{
         }
 
     } 
+
+    static async atualizar(req: Request, res: Response): Promise<Response>{
+        try{
+            const clienteRecebido: ClienteDTO = req.body;
+            
+            const idClienteRecebido = parseInt(req.params.idCliente as string)
+
+            const clienteAtualizado = new Cliente(
+                clienteRecebido.nome,
+                clienteRecebido.cpf,
+                clienteRecebido.telefone
+            );
+
+            clienteAtualizado.setIdCliente(idClienteRecebido);
+
+            const respostaModelo = await Cliente.atualizarCliente(clienteAtualizado);
+
+            if (respostaModelo) {
+
+                return res.status(200).json({mensagem: "Cliente foi atualizado com sucesso!"});
+            } else{
+
+                return res.status(400).json({mensagem: "Não foi possivel atualizar o cliente. Entre em contato com o administrador."})
+            }
+        } catch (error) {
+            console.log(`Erro ao atualizar um cliente.${error}`);
+
+            return res.status(400).json({mensagem: "Não foi possivel atualizar o cliente. entre em contato com o administrador."})
+        }
+    }
 }
 
